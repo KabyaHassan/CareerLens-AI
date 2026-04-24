@@ -1,94 +1,50 @@
 # 🤖 AI Career Assistant for AI/ML Roles
 
-An intelligent Streamlit application that analyzes resume compatibility with AI/ML job descriptions using OpenAI's GPT API.
+An intelligent Streamlit web application that analyzes resume compatibility with AI/ML job descriptions using OpenAI’s GPT model.
 
-## Features
+## 🚀 Live Demo
 
-- **PDF Resume Parsing** – Upload any PDF resume and extract text automatically
-- **AI-Powered Analysis** – Deep compatibility analysis using GPT-4o-mini
-- **Structured Scoring** – Category-wise scoring with justification (not random)
-- **Actionable Insights** – Strengths, gaps, suggestions, and improved resume bullets
-- **AI/ML Focus** – Evaluation tuned for machine learning, deep learning, NLP, MLOps roles
+The application is deployed as a live web app:  
+👉 [Launch App](https://careerlensai0.streamlit.app/)
 
-## Setup & Run Locally
+---
 
-### 1. Prerequisites
+## ✨ Features
 
-- Python 3.9 or higher
-- An OpenAI API key ([Get one here](https://platform.openai.com/api-keys))
+- 📄 **PDF Resume Parsing** – Upload and extract resume text automatically  
+- 🧠 **AI-Powered Analysis** – GPT-based resume vs job description evaluation  
+- 📊 **Structured Scoring System** – Category-wise compatibility scoring  
+- 🔍 **Actionable Insights** – Strengths, gaps, and improvement suggestions  
+- 🎯 **AI/ML Focused** – Optimized for ML, DL, NLP, and MLOps roles  
 
-### 2. Clone / Navigate to the project
+---
+
+## ⚙️ Tech Stack
+
+- Streamlit  
+- OpenAI GPT-4o-mini  
+- PyPDF2  
+- Python-dotenv  
+
+---
+
+## 📊 Scoring System
+
+| Category             | Max Score | Description |
+|---------------------|-----------|-------------|
+| Skills Match         | 40        | Technical skill alignment |
+| Experience Match     | 30        | Relevant experience depth |
+| Project Relevance    | 20        | Project-to-role mapping |
+| Tools & Technologies | 10        | Tools and platforms used |
+| **Total**            | **100**   | Overall compatibility score |
+
+---
+
+## 🖥️ Run Locally
 
 ```bash
 cd d:\NEW
-```
-
-### 3. Create a virtual environment (recommended)
-
-```bash
 python -m venv venv
 venv\Scripts\activate
-```
-
-### 4. Install dependencies
-
-```bash
 pip install -r requirements.txt
-```
-
-### 5. Configure your API key
-
-Create a `.env` file in the project root:
-
-```bash
-copy .env.example .env
-```
-
-Then edit `.env` and replace `sk-your-api-key-here` with your actual OpenAI API key:
-
-```
-OPENAI_API_KEY=sk-proj-xxxxxxxxxxxxxxxxxxxxxxxx
-```
-
-### 6. Run the application
-
-```bash
 streamlit run app.py
-```
-
-The app will open automatically at `http://localhost:8501`.
-
-## How to Use
-
-1. **Upload** your PDF resume using the sidebar file uploader
-2. **Paste** the target AI/ML job description in the text area
-3. **Click** "🚀 Analyze Resume"
-4. **Review** the detailed analysis: match score, category breakdowns, strengths, gaps, and suggestions
-
-## Scoring System
-
-| Category            | Max Score | What It Measures                                  |
-|---------------------|-----------|---------------------------------------------------|
-| Skills Match        | 40        | Technical skills alignment (frameworks, languages) |
-| Experience Match    | 30        | Years & depth of relevant experience              |
-| Project Relevance   | 20        | How well projects map to job requirements         |
-| Tools & Technologies| 10        | Specific tools, platforms, and infrastructure     |
-| **Total**           | **100**   | Sum of all categories                             |
-
-## Project Structure
-
-```
-d:\NEW\
-├── app.py              # Main Streamlit application
-├── requirements.txt    # Python dependencies
-├── .env.example        # Environment variable template
-├── .env                # Your API key (create from .env.example)
-└── README.md           # This file
-```
-
-## Tech Stack
-
-- **Frontend**: Streamlit
-- **LLM**: OpenAI GPT-4o-mini
-- **PDF Parsing**: PyPDF2
-- **Environment**: python-dotenv
