@@ -463,136 +463,227 @@ def format_output(result: dict) -> None:
 # ---------------------------------------------------------------------------
 
 def main():
-    st.set_page_config(page_title="AI Career Assistant", page_icon="🤖", layout="wide")
+    st.set_page_config(page_title="CareerLens AI", page_icon="🔍", layout="wide")
 
-    # ── CSS ────────────────────────────────────────────────────────────
+    # ── Professional CSS ──────────────────────────────────────────────
     st.markdown("""<style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-        .stApp { font-family: 'Inter', sans-serif; }
-        .app-header { text-align: center; padding: 40px 20px 20px; }
-        .app-header h1 { font-size: 2.5rem; font-weight: 800;
-            background: linear-gradient(135deg, #6c63ff, #3b82f6, #06b6d4);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 4px; }
-        .app-header p { color: #8892b0; font-size: 1rem; margin-top: 0; }
-        section[data-testid="stSidebar"] { background: #0a0a1a; }
+
+        .stApp {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Hide defaults */
         #MainMenu, footer, header { visibility: hidden; }
+
+        /* Hero header */
+        .hero {
+            text-align: center;
+            padding: 48px 20px 8px;
+        }
+        .hero h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 30%, #6366f1 60%, #38bdf8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 6px;
+            letter-spacing: -0.5px;
+        }
+        .hero .subtitle {
+            color: #94a3b8;
+            font-size: 1.05rem;
+            font-weight: 400;
+            margin-top: 0;
+        }
+
+        /* Section labels */
+        .section-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #a78bfa;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 8px;
+        }
+
+        /* Glass card */
+        .glass-card {
+            padding: 24px;
+            border-radius: 16px;
+            background: rgba(17, 17, 39, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(124, 58, 237, 0.15);
+            text-align: center;
+            min-height: 150px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: border-color 0.3s ease, transform 0.3s ease;
+        }
+        .glass-card:hover {
+            border-color: rgba(124, 58, 237, 0.4);
+            transform: translateY(-2px);
+        }
+        .glass-card .icon { font-size: 32px; margin-bottom: 10px; }
+        .glass-card .title { font-weight: 600; color: #e2e8f0; font-size: 15px; margin-bottom: 4px; }
+        .glass-card .desc { font-size: 12px; color: #94a3b8; line-height: 1.5; }
+
+        /* Divider */
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(124,58,237,0.3), transparent);
+            margin: 24px 0;
+        }
+
+        /* Inputs */
         .stFileUploader > div { border-radius: 12px; }
-        .stButton > button { width: 100%;
-            background: linear-gradient(135deg, #6c63ff, #3b82f6);
-            color: white; border: none; padding: 14px 24px; border-radius: 12px;
-            font-size: 16px; font-weight: 600; letter-spacing: 0.5px;
-            transition: all 0.3s ease; cursor: pointer; }
-        .stButton > button:hover { transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(108, 99, 255, 0.35); }
-        .stTextArea textarea { border-radius: 12px; border: 1px solid #1e1e3a;
-            font-family: 'Inter', sans-serif; }
+        .stTextArea textarea {
+            border-radius: 12px;
+            border: 1px solid rgba(124, 58, 237, 0.2);
+            font-family: 'Inter', sans-serif;
+            background: rgba(17, 17, 39, 0.4);
+        }
+        .stTextArea textarea:focus {
+            border-color: #7c3aed;
+            box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.15);
+        }
+        .stSelectbox > div > div {
+            border-radius: 12px;
+        }
+
+        /* Primary button */
+        .stButton > button {
+            background: linear-gradient(135deg, #7c3aed 0%, #6366f1 50%, #38bdf8 100%);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 14px;
+            font-size: 17px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(124, 58, 237, 0.25);
+        }
+        .stButton > button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(124, 58, 237, 0.4);
+        }
+        .stButton > button:active {
+            transform: translateY(0);
+        }
+
+        /* Footer */
+        .app-footer {
+            text-align: center;
+            padding: 16px;
+            color: #475569;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+        }
     </style>""", unsafe_allow_html=True)
 
-    # ── Header ─────────────────────────────────────────────────────────
-    st.markdown("""<div class="app-header">
-        <h1>🤖 AI Career Assistant</h1>
-        <p>Domain-Aware Resume Analysis for All CSE Roles</p>
-    </div>""", unsafe_allow_html=True)
+    # ── Hero Header ───────────────────────────────────────────────────
+    st.markdown("""
+    <div class="hero">
+        <h1>🔍 CareerLens AI</h1>
+        <p class="subtitle">Domain-Aware Resume Analysis for Computer Science & Engineering Roles</p>
+    </div>
+    """, unsafe_allow_html=True)
 
-    # ── Main Layout — User-Friendly ──────────────────────────────────
+    # ── Input Section ─────────────────────────────────────────────────
+    st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
 
-    # Row 1: Resume Upload + Job Description (the main inputs)
-    st.markdown("---")
-    r1c1, r1c2 = st.columns([1, 2])
+    # Row 1: Upload Resume + Job Domain
+    r1c1, r1c2 = st.columns([1, 1])
 
     with r1c1:
-        st.markdown("##### 📄 Upload Resume (PDF)")
-        uploaded_file = st.file_uploader("Choose a PDF file", type=["pdf"],
+        st.markdown('<p class="section-label">📄 Upload Resume</p>', unsafe_allow_html=True)
+        uploaded_file = st.file_uploader("Upload PDF", type=["pdf"],
             label_visibility="collapsed")
 
     with r1c2:
-        st.markdown("##### 📝 Paste Job Description")
-        job_description = st.text_area("Paste the job description here", height=180,
-            placeholder="e.g. We are looking for a Backend Engineer with experience in Node.js, PostgreSQL, Docker...",
-            label_visibility="collapsed")
-
-    # Row 2: Domain selector + Analyze button
-    r2c1, r2c2 = st.columns([1, 1])
-
-    with r2c1:
-        st.markdown("##### 🎯 Job Domain")
+        st.markdown('<p class="section-label">🎯 Job Domain</p>', unsafe_allow_html=True)
         selected_domain = st.selectbox("Domain", CSE_DOMAINS, index=0,
             label_visibility="collapsed",
-            help="Choose a CSE domain or let AI auto-detect from the job description.")
+            help="Choose a specific CSE domain or let AI auto-detect from the job description.")
 
-    with r2c2:
-        st.markdown("##### ")
-        analyze_btn = st.button("🚀 Analyze Resume", use_container_width=True)
+    # Row 2: Job Description (full width)
+    st.markdown("")
+    st.markdown('<p class="section-label">📝 Job Description</p>', unsafe_allow_html=True)
+    job_description = st.text_area("Paste the job description", height=200,
+        placeholder="Paste the full job description here...\n\nExample: We are looking for a Backend Engineer with 3+ years of experience in Node.js, PostgreSQL, Docker, and AWS. The ideal candidate should have strong system design skills...",
+        label_visibility="collapsed")
 
-    # API Key — only show setup if not pre-configured
+    # Analyze Button (centered)
+    st.markdown("")
+    bc1, bc2, bc3 = st.columns([1, 1, 1])
+    with bc2:
+        analyze_btn = st.button("🔍 Analyze My Resume", use_container_width=True)
+
+    # ── API Key — only show if not pre-configured ─────────────────────
     key_configured = has_preconfigured_key()
     if key_configured:
-        # Key already set via secrets/env — no UI needed, default to Groq
         provider = "Groq (Free)"
     else:
-        # No key found — show setup for user
-        st.markdown("---")
-        st.warning("⚠️ **API key required.** Set up a free Groq key below to get started.")
+        st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
+        st.warning("⚠️ **API key required to analyze.** Get a free Groq key below — takes 30 seconds.")
         ac1, ac2 = st.columns(2)
         with ac1:
             provider = st.selectbox("🤖 LLM Provider", PROVIDERS, index=0,
                 help="Groq is free and fast (recommended).")
         with ac2:
             if provider == "Groq (Free)":
-                st.markdown("[🔗 Get a FREE Groq API key](https://console.groq.com/keys)")
-                st.text_input("🔑 Groq API Key", type="password", key="groq_key_input",
+                st.markdown("[🔗 Get FREE API key →](https://console.groq.com/keys)")
+                st.text_input("🔑 API Key", type="password", key="groq_key_input",
                     placeholder="gsk_...")
             elif provider == "Google Gemini":
-                st.text_input("🔑 Gemini API Key", type="password", key="gemini_key_input",
+                st.text_input("🔑 API Key", type="password", key="gemini_key_input",
                     placeholder="AIza...")
             else:
-                st.text_input("🔑 OpenAI API Key", type="password", key="openai_key_input",
+                st.text_input("🔑 API Key", type="password", key="openai_key_input",
                     placeholder="sk-proj-...")
 
-    # ── Landing Content (before analysis) ──────────────────────────────
+    # ── Landing Content ───────────────────────────────────────────────
     if not analyze_btn:
-        st.markdown("---")
-        st.markdown("""
-        <div style="text-align:center; margin:10px 0 20px;">
-            <h3 style="color:#ccd6f6;">✨ What You'll Get</h3>
-        </div>
-        """, unsafe_allow_html=True)
+        st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
 
-        f1, f2, f3 = st.columns(3)
+        f1, f2, f3, f4 = st.columns(4)
         features = [
-            ("📊", "Domain-Aware Scoring", "Category scores adapted to Backend, AI/ML, Cybersecurity, DevOps & more."),
-            ("🎯", "Best Fit Roles", "Top 3 career role predictions based on your resume profile."),
-            ("🗺️", "Skill Gap Roadmap", "Prioritized skills to learn with recommended resources."),
+            ("📊", "Smart Scoring", "Domain-specific category scores with reasoning."),
+            ("🎯", "Best Fit Roles", "Top 3 career predictions based on your profile."),
+            ("🗺️", "Skill Roadmap", "Prioritized skills to learn with resources."),
+            ("✍️", "Resume Polish", "AI-rewritten bullet points for impact."),
         ]
-        for col, (icon, title, desc) in zip([f1, f2, f3], features):
+        for col, (icon, title, desc) in zip([f1, f2, f3, f4], features):
             with col:
                 st.markdown(f"""
-                <div style="padding:20px; border-radius:14px; background:#0f0f1a;
-                    border:1px solid #1e1e3a; text-align:center; min-height:150px;
-                    display:flex; flex-direction:column; justify-content:center; align-items:center;">
-                    <p style="font-size:28px; margin-bottom:6px;">{icon}</p>
-                    <p style="font-weight:600; color:#ccd6f6; font-size:14px; margin-bottom:4px;">{title}</p>
-                    <p style="font-size:12px; color:#8892b0; line-height:1.4;">{desc}</p>
+                <div class="glass-card">
+                    <div class="icon">{icon}</div>
+                    <div class="title">{title}</div>
+                    <div class="desc">{desc}</div>
                 </div>
                 """, unsafe_allow_html=True)
 
         st.markdown("""
-        <div style="text-align:center; margin-top:24px;">
-            <p style="color:#555; font-size:12px;">Powered by Groq / Gemini / OpenAI &bull; Built with Streamlit</p>
+        <div class="app-footer">
+            CareerLens AI &bull; Powered by Groq &bull; Built with Streamlit
         </div>
         """, unsafe_allow_html=True)
         return
 
     # ── Validation ─────────────────────────────────────────────────────
     if not uploaded_file:
-        st.error("📄 Please upload a PDF resume above.")
+        st.error("📄 Please upload your resume PDF above.")
         return
     if not job_description.strip():
-        st.error("📝 Please enter a job description above.")
+        st.error("📝 Please paste the job description above.")
         return
 
     # ── Analysis ───────────────────────────────────────────────────────
-    st.markdown("---")
+    st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
     with st.spinner("🔍 Analyzing your resume with domain-aware evaluation..."):
         try:
             cv_text = extract_text_from_pdf(uploaded_file)
@@ -601,7 +692,7 @@ def main():
             return
 
         if len(cv_text.strip()) < 50:
-            st.warning("⚠️ Very little text extracted from PDF. Results may be unreliable.")
+            st.warning("⚠️ Very little text extracted. Results may be unreliable.")
 
         try:
             result = analyze_with_llm(cv_text, job_description, provider, selected_domain)
