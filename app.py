@@ -470,84 +470,62 @@ def main():
         <p>Domain-Aware Resume Analysis for All CSE Roles</p>
     </div>""", unsafe_allow_html=True)
 
-    # ── Sidebar ────────────────────────────────────────────────────────
-    with st.sidebar:
-        st.markdown("## ⚙️ Settings")
-        st.markdown("<p style='color:#8892b0; font-size:13px;'>Upload your resume and paste the job description.</p>", unsafe_allow_html=True)
+    # ── Main Layout — All Controls in Center ─────────────────────────
+    # Row 1: Provider + API Key + Domain
+    st.markdown("---")
+    r1c1, r1c2, r1c3 = st.columns(3)
 
-        st.markdown("---")
-        st.markdown("### 🤖 LLM Provider")
+    with r1c1:
+        st.markdown("##### 🤖 LLM Provider")
         provider = st.selectbox("Choose provider", PROVIDERS, index=0,
-            help="Groq is free and fast (recommended).")
+            help="Groq is free and fast (recommended).", label_visibility="collapsed")
 
-        st.markdown("---")
+    with r1c2:
         if provider == "Groq (Free)":
-            st.markdown("### 🔑 Groq API Key")
-            st.text_input("Enter your Groq API key", type="password", key="groq_key_input",
-                placeholder="gsk_...", help="Free key from https://console.groq.com/keys")
-            st.markdown("<p style='color:#8892b0; font-size:11px;'>✅ <b>FREE</b> — <a href='https://console.groq.com/keys' target='_blank' style='color:#2ecc71;'>Get key here</a></p>", unsafe_allow_html=True)
+            st.markdown("##### 🔑 Groq API Key  ·  [Get FREE key](https://console.groq.com/keys)")
+            st.text_input("API Key", type="password", key="groq_key_input",
+                placeholder="gsk_...", label_visibility="collapsed")
         elif provider == "Google Gemini":
-            st.markdown("### 🔑 Gemini API Key")
-            st.text_input("Enter your Google API key", type="password", key="gemini_key_input", placeholder="AIza...")
+            st.markdown("##### 🔑 Gemini API Key")
+            st.text_input("API Key", type="password", key="gemini_key_input",
+                placeholder="AIza...", label_visibility="collapsed")
         else:
-            st.markdown("### 🔑 OpenAI API Key")
-            st.text_input("Enter your OpenAI API key", type="password", key="openai_key_input", placeholder="sk-proj-...")
+            st.markdown("##### 🔑 OpenAI API Key")
+            st.text_input("API Key", type="password", key="openai_key_input",
+                placeholder="sk-proj-...", label_visibility="collapsed")
 
-        st.markdown("---")
-        st.markdown("### 🎯 Job Domain")
-        selected_domain = st.selectbox("Select domain (or auto-detect)", CSE_DOMAINS, index=0,
-            help="Choose a specific CSE domain or let the AI auto-detect from the job description.")
+    with r1c3:
+        st.markdown("##### 🎯 Job Domain")
+        selected_domain = st.selectbox("Domain", CSE_DOMAINS, index=0,
+            label_visibility="collapsed",
+            help="Choose a CSE domain or let AI auto-detect.")
 
-        st.markdown("---")
-        st.markdown("### 📄 Upload Resume")
-        uploaded_file = st.file_uploader("Choose a PDF file", type=["pdf"])
+    # Row 2: Resume Upload + Job Description
+    st.markdown("---")
+    r2c1, r2c2 = st.columns([1, 2])
 
-        st.markdown("---")
-        st.markdown("### 📝 Job Description")
-        job_description = st.text_area("Paste the job description here", height=200,
-            placeholder="e.g. We are looking for a Backend Engineer with experience in Node.js, PostgreSQL...")
+    with r2c1:
+        st.markdown("##### 📄 Upload Resume (PDF)")
+        uploaded_file = st.file_uploader("Choose a PDF file", type=["pdf"],
+            label_visibility="collapsed")
 
-        st.markdown("---")
+    with r2c2:
+        st.markdown("##### 📝 Job Description")
+        job_description = st.text_area("Paste the job description here", height=180,
+            placeholder="e.g. We are looking for a Backend Engineer with experience in Node.js, PostgreSQL, Docker...",
+            label_visibility="collapsed")
+
+    # Analyze Button
+    st.markdown("")
+    bc1, bc2, bc3 = st.columns([1, 2, 1])
+    with bc2:
         analyze_btn = st.button("🚀 Analyze Resume", use_container_width=True)
 
-        st.markdown("---")
-        st.markdown("<p style='text-align:center; color:#555; font-size:11px;'>Powered by Groq / Gemini / OpenAI</p>", unsafe_allow_html=True)
-
-    # ── Main Content ───────────────────────────────────────────────────
+    # ── Landing Content (before analysis) ──────────────────────────────
     if not analyze_btn:
-        # Landing — How to Use Guide
-        st.markdown("""
-        <div style="max-width:800px; margin:20px auto; text-align:center;">
-            <p style="font-size:18px; color:#8892b0; margin-bottom:30px;">
-                Analyze your resume against any CSE job description with AI-powered domain-aware evaluation.
-            </p>
-        </div>
-        """, unsafe_allow_html=True)
-
-        # Step cards
-        c1, c2, c3, c4 = st.columns(4)
-        steps = [
-            ("1️⃣", "Enter API Key", "Paste your free Groq API key in the sidebar.", "#6c63ff"),
-            ("2️⃣", "Upload Resume", "Upload your PDF resume/CV.", "#3b82f6"),
-            ("3️⃣", "Paste JD & Domain", "Add job description. Pick a domain or auto-detect.", "#06b6d4"),
-            ("4️⃣", "Get Analysis", "Click Analyze Resume for your full report.", "#2ecc71"),
-        ]
-        for col, (num, title, desc, color) in zip([c1, c2, c3, c4], steps):
-            with col:
-                st.markdown(f"""
-                <div style="padding:24px 16px; border-radius:16px; background:#0f0f1a;
-                    border:1px solid {color}33; text-align:center; min-height:200px;
-                    display:flex; flex-direction:column; justify-content:center; align-items:center;">
-                    <p style="font-size:36px; margin-bottom:8px;">{num}</p>
-                    <p style="font-weight:700; color:#ccd6f6; margin-bottom:6px; font-size:15px;">{title}</p>
-                    <p style="font-size:12px; color:#8892b0; line-height:1.5;">{desc}</p>
-                </div>
-                """, unsafe_allow_html=True)
-
-        # Features section
         st.markdown("---")
         st.markdown("""
-        <div style="max-width:800px; margin:0 auto; text-align:center;">
+        <div style="text-align:center; margin:10px 0 20px;">
             <h3 style="color:#ccd6f6;">✨ What You'll Get</h3>
         </div>
         """, unsafe_allow_html=True)
@@ -562,7 +540,7 @@ def main():
             with col:
                 st.markdown(f"""
                 <div style="padding:20px; border-radius:14px; background:#0f0f1a;
-                    border:1px solid #1e1e3a; text-align:center; min-height:160px;
+                    border:1px solid #1e1e3a; text-align:center; min-height:150px;
                     display:flex; flex-direction:column; justify-content:center; align-items:center;">
                     <p style="font-size:28px; margin-bottom:6px;">{icon}</p>
                     <p style="font-weight:600; color:#ccd6f6; font-size:14px; margin-bottom:4px;">{title}</p>
@@ -571,23 +549,22 @@ def main():
                 """, unsafe_allow_html=True)
 
         st.markdown("""
-        <div style="text-align:center; margin-top:30px;">
-            <p style="color:#8892b0; font-size:13px;">
-                👈 Use the <b>sidebar</b> to get started — all controls are there.
-            </p>
+        <div style="text-align:center; margin-top:24px;">
+            <p style="color:#555; font-size:12px;">Powered by Groq / Gemini / OpenAI &bull; Built with Streamlit</p>
         </div>
         """, unsafe_allow_html=True)
         return
 
     # ── Validation ─────────────────────────────────────────────────────
     if not uploaded_file:
-        st.error("📄 Please upload a PDF resume in the sidebar.")
+        st.error("📄 Please upload a PDF resume above.")
         return
     if not job_description.strip():
-        st.error("📝 Please enter a job description in the sidebar.")
+        st.error("📝 Please enter a job description above.")
         return
 
     # ── Analysis ───────────────────────────────────────────────────────
+    st.markdown("---")
     with st.spinner("🔍 Analyzing your resume with domain-aware evaluation..."):
         try:
             cv_text = extract_text_from_pdf(uploaded_file)
@@ -609,3 +586,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
