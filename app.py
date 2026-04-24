@@ -42,15 +42,39 @@ CSE_DOMAINS = [
 
 
 def get_api_key(provider: str) -> str:
-    """Resolve API key from sidebar input (session state) or environment variable."""
+    """Resolve API key: session state → Streamlit secrets → env variable."""
     key_map = {
         "Groq (Free)": ("groq_key_input", "GROQ_API_KEY"),
         "Google Gemini": ("gemini_key_input", "GOOGLE_API_KEY"),
         "OpenAI": ("openai_key_input", "OPENAI_API_KEY"),
     }
     session_key, env_key = key_map.get(provider, ("", ""))
-    sidebar_val = st.session_state.get(session_key, "").strip()
-    return sidebar_val if sidebar_val else os.getenv(env_key, "")
+    # 1. Check user input from UI
+    ui_val = st.session_state.get(session_key, "").strip()
+    if ui_val:
+        return ui_val
+    # 2. Check Streamlit secrets (for deployed apps)
+    try:
+        secret_val = st.secrets.get(env_key, "")
+        if secret_val:
+            return secret_val
+    except Exception:
+        pass
+    # 3. Check environment variable
+    return os.getenv(env_key, "")
+
+
+def has_preconfigured_key() -> bool:
+    """Check if any API key is already configured via secrets or env."""
+    for env_key in ["GROQ_API_KEY", "GOOGLE_API_KEY", "OPENAI_API_KEY"]:
+        try:
+            if st.secrets.get(env_key, ""):
+                return True
+        except Exception:
+            pass
+        if os.getenv(env_key, ""):
+            return True
+    return False
 
 
 # ---------------------------------------------------------------------------
@@ -470,56 +494,56 @@ def main():
         <p>Domain-Aware Resume Analysis for All CSE Roles</p>
     </div>""", unsafe_allow_html=True)
 
-    # ── Main Layout — All Controls in Center ─────────────────────────
-    # Row 1: Provider + API Key + Domain
+    # ── Main Layout — User-Friendly ──────────────────────────────────
+
+    # Row 1: Resume Upload + Job Description (the main inputs)
     st.markdown("---")
-    r1c1, r1c2, r1c3 = st.columns(3)
+    r1c1, r1c2 = st.columns([1, 2])
 
     with r1c1:
-        st.markdown("##### 🤖 LLM Provider")
-        provider = st.selectbox("Choose provider", PROVIDERS, index=0,
-            help="Groq is free and fast (recommended).", label_visibility="collapsed")
-
-    with r1c2:
-        if provider == "Groq (Free)":
-            st.markdown("##### 🔑 Groq API Key  ·  [Get FREE key](https://console.groq.com/keys)")
-            st.text_input("API Key", type="password", key="groq_key_input",
-                placeholder="gsk_...", label_visibility="collapsed")
-        elif provider == "Google Gemini":
-            st.markdown("##### 🔑 Gemini API Key")
-            st.text_input("API Key", type="password", key="gemini_key_input",
-                placeholder="AIza...", label_visibility="collapsed")
-        else:
-            st.markdown("##### 🔑 OpenAI API Key")
-            st.text_input("API Key", type="password", key="openai_key_input",
-                placeholder="sk-proj-...", label_visibility="collapsed")
-
-    with r1c3:
-        st.markdown("##### 🎯 Job Domain")
-        selected_domain = st.selectbox("Domain", CSE_DOMAINS, index=0,
-            label_visibility="collapsed",
-            help="Choose a CSE domain or let AI auto-detect.")
-
-    # Row 2: Resume Upload + Job Description
-    st.markdown("---")
-    r2c1, r2c2 = st.columns([1, 2])
-
-    with r2c1:
         st.markdown("##### 📄 Upload Resume (PDF)")
         uploaded_file = st.file_uploader("Choose a PDF file", type=["pdf"],
             label_visibility="collapsed")
 
-    with r2c2:
-        st.markdown("##### 📝 Job Description")
+    with r1c2:
+        st.markdown("##### 📝 Paste Job Description")
         job_description = st.text_area("Paste the job description here", height=180,
             placeholder="e.g. We are looking for a Backend Engineer with experience in Node.js, PostgreSQL, Docker...",
             label_visibility="collapsed")
 
-    # Analyze Button
-    st.markdown("")
-    bc1, bc2, bc3 = st.columns([1, 2, 1])
-    with bc2:
+    # Row 2: Domain selector + Analyze button
+    r2c1, r2c2 = st.columns([1, 1])
+
+    with r2c1:
+        st.markdown("##### 🎯 Job Domain")
+        selected_domain = st.selectbox("Domain", CSE_DOMAINS, index=0,
+            label_visibility="collapsed",
+            help="Choose a CSE domain or let AI auto-detect from the job description.")
+
+    with r2c2:
+        st.markdown("##### ")
         analyze_btn = st.button("🚀 Analyze Resume", use_container_width=True)
+
+    # Advanced Settings (collapsed by default — for API key configuration)
+    key_configured = has_preconfigured_key()
+    with st.expander("⚙️ Advanced Settings" + (" ✅" if key_configured else " — Set up API Key"), expanded=not key_configured):
+        ac1, ac2 = st.columns(2)
+        with ac1:
+            provider = st.selectbox("🤖 LLM Provider", PROVIDERS, index=0,
+                help="Groq is free and fast (recommended).")
+        with ac2:
+            if provider == "Groq (Free)":
+                st.markdown("[🔗 Get a FREE Groq API key](https://console.groq.com/keys)")
+                st.text_input("🔑 Groq API Key", type="password", key="groq_key_input",
+                    placeholder="gsk_...")
+            elif provider == "Google Gemini":
+                st.text_input("🔑 Gemini API Key", type="password", key="gemini_key_input",
+                    placeholder="AIza...")
+            else:
+                st.text_input("🔑 OpenAI API Key", type="password", key="openai_key_input",
+                    placeholder="sk-proj-...")
+        if key_configured:
+            st.success("✅ API key is configured. You're ready to analyze!")
 
     # ── Landing Content (before analysis) ──────────────────────────────
     if not analyze_btn:
