@@ -2,7 +2,7 @@
 
 An intelligent Streamlit web application that analyzes resume compatibility with AI/ML job descriptions using OpenAI’s GPT model.
 
-## 🚀 Deploymen
+## 🚀 Deployment
 The application is deployed as a live web app:  
 👉 [Launch App](https://careerlensai0.streamlit.app/)
 
