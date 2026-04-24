@@ -1,4 +1,4 @@
-# 🤖 AI Career Assistant for AI/ML Roles
+# 🤖 AI Career Assistant 
 
 An intelligent Streamlit web application that analyzes resume compatibility with AI/ML job descriptions using OpenAI’s GPT model.
 
