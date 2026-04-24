@@ -524,9 +524,15 @@ def main():
         st.markdown("##### ")
         analyze_btn = st.button("🚀 Analyze Resume", use_container_width=True)
 
-    # Advanced Settings (collapsed by default — for API key configuration)
+    # API Key — only show setup if not pre-configured
     key_configured = has_preconfigured_key()
-    with st.expander("⚙️ Advanced Settings" + (" ✅" if key_configured else " — Set up API Key"), expanded=not key_configured):
+    if key_configured:
+        # Key already set via secrets/env — no UI needed, default to Groq
+        provider = "Groq (Free)"
+    else:
+        # No key found — show setup for user
+        st.markdown("---")
+        st.warning("⚠️ **API key required.** Set up a free Groq key below to get started.")
         ac1, ac2 = st.columns(2)
         with ac1:
             provider = st.selectbox("🤖 LLM Provider", PROVIDERS, index=0,
@@ -542,8 +548,6 @@ def main():
             else:
                 st.text_input("🔑 OpenAI API Key", type="password", key="openai_key_input",
                     placeholder="sk-proj-...")
-        if key_configured:
-            st.success("✅ API key is configured. You're ready to analyze!")
 
     # ── Landing Content (before analysis) ──────────────────────────────
     if not analyze_btn:
