@@ -1,5 +1,5 @@
 """
-AI Career Assistant for CSE Roles
+JobFit Checker for CSE Roles
 A Streamlit application that analyzes resume compatibility with ANY Computer Science
 & Engineering job description using domain-aware evaluation via LLM APIs.
 """
@@ -463,7 +463,7 @@ def format_output(result: dict) -> None:
 # ---------------------------------------------------------------------------
 
 def main():
-    st.set_page_config(page_title="CareerLens AI", page_icon="🔍", layout="wide")
+    st.set_page_config(page_title="JobFit Checker", page_icon="🔍", layout="wide")
 
     # ── Professional CSS ──────────────────────────────────────────────
     st.markdown("""<style>
@@ -588,7 +588,7 @@ def main():
     # ── Hero Header ───────────────────────────────────────────────────
     st.markdown("""
     <div class="hero">
-        <h1>🔍 CareerLens AI</h1>
+        <h1>🔍 JobFit Checker</h1>
         <p class="subtitle">Domain-Aware Resume Analysis for Computer Science & Engineering Roles</p>
     </div>
     """, unsafe_allow_html=True)
@@ -669,7 +669,7 @@ def main():
 
         st.markdown("""
         <div class="app-footer">
-            CareerLens AI &bull; Powered by Groq &bull; Built with Streamlit
+            JobFit Checker &bull; Powered by Groq &bull; Built with Streamlit
         </div>
         """, unsafe_allow_html=True)
         return
