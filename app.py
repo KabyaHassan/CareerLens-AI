@@ -515,22 +515,68 @@ def main():
 
     # ── Main Content ───────────────────────────────────────────────────
     if not analyze_btn:
+        # Landing — How to Use Guide
+        st.markdown("""
+        <div style="max-width:800px; margin:20px auto; text-align:center;">
+            <p style="font-size:18px; color:#8892b0; margin-bottom:30px;">
+                Analyze your resume against any CSE job description with AI-powered domain-aware evaluation.
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+
+        # Step cards
         c1, c2, c3, c4 = st.columns(4)
-        cards = [
-            ("📄", "Upload Resume", "Upload your PDF resume in the sidebar."),
-            ("🎯", "Select Domain", "Pick a CSE domain or let AI auto-detect."),
-            ("📝", "Paste JD", "Provide the target job description."),
-            ("🤖", "Get Analysis", "Domain-aware report with career insights."),
+        steps = [
+            ("1️⃣", "Enter API Key", "Paste your free Groq API key in the sidebar.", "#6c63ff"),
+            ("2️⃣", "Upload Resume", "Upload your PDF resume/CV.", "#3b82f6"),
+            ("3️⃣", "Paste JD & Domain", "Add job description. Pick a domain or auto-detect.", "#06b6d4"),
+            ("4️⃣", "Get Analysis", "Click Analyze Resume for your full report.", "#2ecc71"),
         ]
-        for col, (icon, title, desc) in zip([c1, c2, c3, c4], cards):
+        for col, (num, title, desc, color) in zip([c1, c2, c3, c4], steps):
             with col:
-                st.markdown(f"""<div style="padding:20px; border-radius:16px; background:#0f0f1a;
-                    border:1px solid #1e1e3a; text-align:center; height:180px;
-                    display:flex; flex-direction:column; justify-content:center;">
-                    <p style="font-size:32px; margin-bottom:6px;">{icon}</p>
-                    <p style="font-weight:600; color:#ccd6f6; margin-bottom:4px; font-size:14px;">{title}</p>
-                    <p style="font-size:12px; color:#8892b0;">{desc}</p>
-                </div>""", unsafe_allow_html=True)
+                st.markdown(f"""
+                <div style="padding:24px 16px; border-radius:16px; background:#0f0f1a;
+                    border:1px solid {color}33; text-align:center; min-height:200px;
+                    display:flex; flex-direction:column; justify-content:center; align-items:center;">
+                    <p style="font-size:36px; margin-bottom:8px;">{num}</p>
+                    <p style="font-weight:700; color:#ccd6f6; margin-bottom:6px; font-size:15px;">{title}</p>
+                    <p style="font-size:12px; color:#8892b0; line-height:1.5;">{desc}</p>
+                </div>
+                """, unsafe_allow_html=True)
+
+        # Features section
+        st.markdown("---")
+        st.markdown("""
+        <div style="max-width:800px; margin:0 auto; text-align:center;">
+            <h3 style="color:#ccd6f6;">✨ What You'll Get</h3>
+        </div>
+        """, unsafe_allow_html=True)
+
+        f1, f2, f3 = st.columns(3)
+        features = [
+            ("📊", "Domain-Aware Scoring", "Category scores adapted to Backend, AI/ML, Cybersecurity, DevOps & more."),
+            ("🎯", "Best Fit Roles", "Top 3 career role predictions based on your resume profile."),
+            ("🗺️", "Skill Gap Roadmap", "Prioritized skills to learn with recommended resources."),
+        ]
+        for col, (icon, title, desc) in zip([f1, f2, f3], features):
+            with col:
+                st.markdown(f"""
+                <div style="padding:20px; border-radius:14px; background:#0f0f1a;
+                    border:1px solid #1e1e3a; text-align:center; min-height:160px;
+                    display:flex; flex-direction:column; justify-content:center; align-items:center;">
+                    <p style="font-size:28px; margin-bottom:6px;">{icon}</p>
+                    <p style="font-weight:600; color:#ccd6f6; font-size:14px; margin-bottom:4px;">{title}</p>
+                    <p style="font-size:12px; color:#8892b0; line-height:1.4;">{desc}</p>
+                </div>
+                """, unsafe_allow_html=True)
+
+        st.markdown("""
+        <div style="text-align:center; margin-top:30px;">
+            <p style="color:#8892b0; font-size:13px;">
+                👈 Use the <b>sidebar</b> to get started — all controls are there.
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
         return
 
     # ── Validation ─────────────────────────────────────────────────────
