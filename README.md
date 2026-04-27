@@ -1,14 +1,14 @@
-# 🤖 AI Career Assistant 
+# AI Career Assistant 
 
 An intelligent Streamlit web application that analyzes resume compatibility with AI/ML job descriptions using OpenAI’s GPT model.
 
-## 🚀 Deployment
+## Deployment
 The application is deployed as a live web app:  
 👉 [Launch App](https://careerlensai0.streamlit.app/)
 
 ---
 
-## ✨ Features
+## Features
 
 - 📄 **PDF Resume Parsing** – Upload and extract resume text automatically  
 - 🧠 **AI-Powered Analysis** – GPT-based resume vs job description evaluation  
@@ -18,7 +18,7 @@ The application is deployed as a live web app:
 
 ---
 
-## ⚙️ Tech Stack
+## Tech Stack
 
 - Streamlit  
 - OpenAI GPT-4o-mini  
@@ -27,7 +27,7 @@ The application is deployed as a live web app:
 
 ---
 
-## 📊 Scoring System
+## Scoring System
 
 | Category             | Max Score | Description |
 |---------------------|-----------|-------------|
@@ -39,7 +39,7 @@ The application is deployed as a live web app:
 
 ---
 
-## 🖥️ Run Locally
+## Run Locally
 
 ```bash
 cd d:\NEW
