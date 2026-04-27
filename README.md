@@ -4,7 +4,7 @@ An intelligent Streamlit web application that analyzes resume compatibility with
 
 ## Deployment
 The application is deployed as a live web app:  
-[Launch App](https://careerlensai0.streamlit.app/)
+[Launch App](https://jobfitchecker-ai.streamlit.app/)
 
 ---
 
